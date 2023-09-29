@@ -2,9 +2,13 @@
 
 internal interface ICanvas
 {
-    void AddWidgets(IDictionary<WidgetTypes, List<IWidgetSettings>> widgetItems);
+    void AddWidgets(IEnumerable<IWidget> widgetItems);
 
-    void AddWidget(WidgetTypes widgetType, params IWidgetSettings[] widgetSettings);
+    void AddWidget(IWidget widgetItem);
+
+    void RemoveWidget(IWidget widgetItem);
+
+    bool IsExists(IWidget widgetItem);
 
     void DrawAllWidgets();
 

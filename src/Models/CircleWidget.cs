@@ -4,17 +4,13 @@ internal class CircleWidget : WidgetBase<CircleWidgetSettings>
 {
     public override WidgetTypes Name => WidgetTypes.Circle;
 
-    public CircleWidget()
-        : base()
+    public CircleWidget(CircleWidgetSettings widgetSettings)
+        : base(widgetSettings)
     {
     }
 
-    public override void Draw(CircleWidgetSettings widgetSettings)
+    public override void Draw()
     {
-        ArgumentNullException.ThrowIfNull(nameof(widgetSettings));
-
-        Settings = widgetSettings;
-
         var area = Settings.Radius > default(decimal) ?
             ((decimal)Math.PI * Settings.Radius * Settings.Radius) : default(decimal?);
 

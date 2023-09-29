@@ -4,17 +4,13 @@ internal class TextBoxWidget : WidgetBase<TextBoxWidgetSettings>
 {
     public override WidgetTypes Name => WidgetTypes.TextBox;
 
-    public TextBoxWidget()
-        : base()
+    public TextBoxWidget(TextBoxWidgetSettings widgetSettings)
+        : base(widgetSettings)
     {
     }
 
-    public override void Draw(TextBoxWidgetSettings widgetSettings)
+    public override void Draw()
     {
-        ArgumentNullException.ThrowIfNull(nameof(widgetSettings));
-
-        Settings = widgetSettings;
-
         var area = Settings.Height > default(decimal) &&
             Settings.Width > default(decimal) &&
             Settings.Height != Settings.Width ?

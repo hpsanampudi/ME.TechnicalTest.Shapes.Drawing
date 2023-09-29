@@ -4,17 +4,13 @@ internal class EllipseWidget : WidgetBase<EllipseWidgetSettings>
 {
     public override WidgetTypes Name => WidgetTypes.Ellipse;
 
-    public EllipseWidget()
-        : base()
+    public EllipseWidget(EllipseWidgetSettings widgetSettings)
+        : base(widgetSettings)
     {
     }
 
-    public override void Draw(EllipseWidgetSettings widgetSettings)
+    public override void Draw()
     {
-        ArgumentNullException.ThrowIfNull(nameof(widgetSettings));
-
-        Settings = widgetSettings;
-
         var area = Settings.AxisA > default(decimal) &&
             Settings.AxisB > default(decimal) &&
             Settings.AxisA != Settings.AxisB ?

@@ -1,9 +1,9 @@
 ﻿namespace ME.TechnicalTest.Shapes.Drawing.Interfaces;
 
-internal interface IWidgetRender<TSettings>
+internal interface IWidgetRender<out TSettings>
     where TSettings : IWidgetSettings
 {
-    TSettings? Settings { get; }
+    TSettings Settings { get; }
 
-    void Draw(TSettings widgetSettings);
+    void Draw();
 }

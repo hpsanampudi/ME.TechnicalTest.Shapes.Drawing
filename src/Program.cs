@@ -31,7 +31,7 @@ internal static class Program
         Console.ReadLine();
     }
 
-    private static Dictionary<WidgetTypes, List<IWidgetSettings>> GetAllConfiguredWidgets()
+    private static List<IWidget> GetAllConfiguredWidgets()
     {
         var drawWidgetShapesOnCanvasMessage = "To draw widget shapes on canvas press 'D|d' and enter key";
 
@@ -44,7 +44,7 @@ internal static class Program
         Console.WriteLine($"{addWidgetToCanvasMessage} (or) {drawWidgetShapesOnCanvasMessage} " +
             $"(or) {exitMessage}");
 
-        var configuredWidgetsList = new Dictionary<WidgetTypes, List<IWidgetSettings>>();
+        var configuredWidgetsList = new List<IWidget>();
 
         string? enteredValue;
 
@@ -91,8 +91,8 @@ internal static class Program
                         Console.WriteLine($"Enter {nameof(IQuadrilateralWidgetSettings.Width)}:");
                         _ = decimal.TryParse(Console.ReadLine(), out var width);
 
-                        AddOrAppendWidgetConfiguration(
-                            widgetType, new QuadrilateralWidgetSettings(x, y, height, width));
+                        configuredWidgetsList.Add(new SquareWidget(
+                            new QuadrilateralWidgetSettings(x, y, height, width)));
                     }
                     break;
 
@@ -112,8 +112,8 @@ internal static class Program
                         Console.WriteLine($"Enter {nameof(IQuadrilateralWidgetSettings.Width)}:");
                         _ = decimal.TryParse(Console.ReadLine(), out var width);
 
-                        AddOrAppendWidgetConfiguration(
-                            widgetType, new QuadrilateralWidgetSettings(x, y, height, width));
+                        configuredWidgetsList.Add(new RectangleWidget(
+                            new QuadrilateralWidgetSettings(x, y, height, width)));
                     }
                     break;
 
@@ -130,8 +130,8 @@ internal static class Program
                         Console.WriteLine($"Enter {nameof(ICircleWidgetSettings.Radius)}:");
                         _ = decimal.TryParse(Console.ReadLine(), out var radius);
 
-                        AddOrAppendWidgetConfiguration(
-                            widgetType, new CircleWidgetSettings(x, y, radius));
+                        configuredWidgetsList.Add(new CircleWidget(
+                            new CircleWidgetSettings(x, y, radius)));
                     }
                     break;
 
@@ -151,8 +151,8 @@ internal static class Program
                         Console.WriteLine($"Enter {nameof(IEllipseWidgetSettings.AxisB)}:");
                         _ = decimal.TryParse(Console.ReadLine(), out var b);
 
-                        AddOrAppendWidgetConfiguration(
-                            widgetType, new EllipseWidgetSettings(x, y, a, b));
+                        configuredWidgetsList.Add(new EllipseWidget(
+                            new EllipseWidgetSettings(x, y, a, b)));
                     }
                     break;
 
@@ -179,9 +179,8 @@ internal static class Program
                         var bkgColor = string.IsNullOrWhiteSpace(Console.ReadLine()!) ?
                             ConsoleColor.Green : ConsoleColor.Yellow;
 
-                        AddOrAppendWidgetConfiguration(
-                            widgetType,
-                            new TextBoxWidgetSettings(x, y, height, width, text, bkgColor));
+                        configuredWidgetsList.Add(new TextBoxWidget(
+                            new TextBoxWidgetSettings(x, y, height, width, text, bkgColor)));
                     }
                     break;
 
@@ -196,23 +195,5 @@ internal static class Program
         }
 
         return configuredWidgetsList;
-
-        void AddOrAppendWidgetConfiguration(WidgetTypes widgetType, IWidgetSettings settings)
-        {
-            if (configuredWidgetsList.ContainsKey(widgetType))
-            {
-                var configuredSettings = configuredWidgetsList[widgetType];
-
-                //Hp --> Logic:  Remove duplicates settings
-                if (!configuredSettings.Contains(settings))
-                {
-                    configuredSettings.Add(settings);
-                }
-            }
-            else
-            {
-                configuredWidgetsList.Add(widgetType, new List<IWidgetSettings> { settings });
-            }
-        }
     }
 }

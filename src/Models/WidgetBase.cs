@@ -7,13 +7,12 @@ internal abstract class WidgetBase<TSettings> : IWidget, IWidgetRender<TSettings
 
     public decimal? Size { get; protected set; }
 
-    public TSettings? Settings { get; protected set; }
+    public TSettings Settings { get; protected set; }
 
-    protected WidgetBase()
+    protected WidgetBase(TSettings widgetSettings)
     {
+        Settings = widgetSettings ?? throw new ArgumentNullException(nameof(widgetSettings));
     }
 
-    public abstract void Draw(TSettings widgetSettings);
-
-    void IWidget.DrawShape(IWidgetSettings widgetSettings) => Draw((TSettings)widgetSettings);
+    public abstract void Draw();
 }

@@ -4,17 +4,13 @@ internal class RectangleWidget : WidgetBase<QuadrilateralWidgetSettings>
 {
     public override WidgetTypes Name => WidgetTypes.Rectangle;
 
-    public RectangleWidget()
-        : base()
+    public RectangleWidget(QuadrilateralWidgetSettings widgetSettings)
+        : base(widgetSettings)
     {
     }
 
-    public override void Draw(QuadrilateralWidgetSettings widgetSettings)
+    public override void Draw()
     {
-        ArgumentNullException.ThrowIfNull(nameof(widgetSettings));
-
-        Settings = widgetSettings;
-
         var area = Settings.Height > default(decimal) &&
             Settings.Width > default(decimal) &&
             Settings.Height != Settings.Width ?

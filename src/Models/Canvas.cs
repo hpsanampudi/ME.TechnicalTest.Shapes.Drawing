@@ -2,59 +2,72 @@
 
 internal class Canvas : ICanvas
 {
-    private readonly IDictionary<WidgetTypes, List<IWidgetSettings>> widgetShapesToDrawList;
+    private readonly IList<IWidget> widgetShapesToDrawList;
 
     public Canvas()
     {
-        widgetShapesToDrawList = new Dictionary<WidgetTypes, List<IWidgetSettings>>();
+        widgetShapesToDrawList = new List<IWidget>();
     }
 
-    public void AddWidgets(IDictionary<WidgetTypes, List<IWidgetSettings>> widgetItems)
+    public void AddWidgets(IEnumerable<IWidget> widgetItems)
     {
+        ArgumentNullException.ThrowIfNull(nameof(widgetItems));
+
         if (!widgetItems.Any())
         {
             return;
         }
 
-        foreach (var kvp in widgetItems)
+        foreach (var item in widgetItems)
         {
-            AddWidget(kvp.Key, kvp.Value.ToArray());
+            AddWidget(item);
         }
     }
 
-    public void AddWidget(WidgetTypes widgetType, params IWidgetSettings[] widgetSettings)
+    public void AddWidget(IWidget widgetItem)
     {
-        if (widgetShapesToDrawList.ContainsKey(widgetType))
-        {
-            widgetShapesToDrawList[widgetType].AddRange(widgetSettings);
+        ArgumentNullException.ThrowIfNull(nameof(widgetItem));
 
+        if (IsExists(widgetItem))
+        {
             return;
         }
 
-        widgetShapesToDrawList.Add(widgetType, widgetSettings.ToList());
+        widgetShapesToDrawList.Add(widgetItem);
+    }
+
+    public void RemoveWidget(IWidget widgetItem)
+    {
+        ArgumentNullException.ThrowIfNull(nameof(widgetItem));
+
+        if (!IsExists(widgetItem))
+        {
+            return;
+        }
+
+        widgetShapesToDrawList.Remove(widgetItem);
+    }
+
+    public bool IsExists(IWidget widgetItem)
+    {
+        ArgumentNullException.ThrowIfNull(nameof(widgetItem));
+
+        var widgetItemSettings = ((IWidgetRender<IWidgetSettings>)widgetItem).Settings;
+
+        var isExists = widgetShapesToDrawList
+            .OfType<IWidgetRender<IWidgetSettings>>()
+            .Any(w => w.Settings.Equals(widgetItemSettings));
+
+        return isExists;
     }
 
     public void DrawAllWidgets()
     {
-        foreach (var kvp in widgetShapesToDrawList)
+        foreach (var item in widgetShapesToDrawList)
         {
-            var widgetType = kvp.Key;
+            var renderer = (IWidgetRender<IWidgetSettings>)item;
 
-            IWidget renderer = widgetType switch
-            {
-                WidgetTypes.Square => new SquareWidget(),
-                WidgetTypes.Rectangle => new RectangleWidget(),
-                WidgetTypes.Circle => new CircleWidget(),
-                WidgetTypes.Ellipse => new EllipseWidget(),
-                WidgetTypes.TextBox => new TextBoxWidget(),
-                _ => throw new NotImplementedException(
-                    $"The widget type '{widgetType}' not handled programatically!")
-            };
-
-            foreach (var settings in kvp.Value)
-            {
-                renderer.DrawShape(settings);
-            }
+            renderer.Draw();
         }
     }
 

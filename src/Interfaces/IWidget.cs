@@ -5,6 +5,4 @@ internal interface IWidget
     WidgetTypes Name { get; }
 
     decimal? Size { get; }
-
-    void DrawShape(IWidgetSettings widgetSettings);
 }
